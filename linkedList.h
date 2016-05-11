@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 struct LinkedList {
 	int segSize;
 	void* segPtr;

@@ -1,4 +1,5 @@
 #include "linkedList.h"
+#include <stdio.h>
 
 void push(struct LinkedList* head, void* addres, size_t size) 
 {
@@ -6,10 +7,30 @@ void push(struct LinkedList* head, void* addres, size_t size)
 	if (tmp == NULL)
 		exit(1);
 
+	if (head == NULL){
+		tmp->next = head;
+		tmp->segSize = size;
+		tmp->segPtr = addres;
+		head = tmp;
+		return;
+	}
+
+	struct LinkedList *iterator = head;
+	struct LinkedList *preiterator = iterator;
+	while(iterator->next != NULL){
+		if(iterator->segPtr < addres)
+			break;
+		preiterator = iterator;
+		iterator = iterator->next;
+	}
 	tmp->next = head;
 	tmp->segSize = size;
 	tmp->segPtr = addres;
-	head = tmp;
+	tmp->next = iterator;
+	if (iterator == preiterator){
+		return;
+	} 
+	preiterator->next = tmp;
 }
 
 void pop(struct LinkedList* head, void* ptr) 
@@ -17,10 +38,8 @@ void pop(struct LinkedList* head, void* ptr)
 	struct LinkedList* prehead = head;
 	while(head != NULL){
 		prehead = head;
-		if (head->segPtr == ptr){
-			errorFlag =
+		if (head->segPtr == ptr)
 			break;
-		}
 		head = head->next;
 	}
 	if (head == NULL){
@@ -40,7 +59,7 @@ void pop(struct LinkedList* head, void* ptr)
 	{
 		prehead->next = NULL;
 		free(head);
-		return
+		return;
 	}
 
 	//in the middle
