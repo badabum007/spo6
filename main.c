@@ -7,6 +7,8 @@ struct MemoryManagement memMan;
 
 void* my_malloc(size_t size)
 {
+	if (size == 0)
+		return NULL;
 	if(memMan.freeMem < size){
 		puts("not enough memory");
 		exit(1);
@@ -14,9 +16,13 @@ void* my_malloc(size_t size)
 	void* address;
 	address = findFreeMem(&memMan, size);
 	printf("%p\n", address);
-	printf("%zx\n", size);
-	//push(memMan.linkedList, address, size); //add ptr and size to memMan
+	printf("%zd\n", size);
+	push(&(memMan.linkedList), address, size); //add ptr and size to memMan
+	printf("after push head comes to %p\n", memMan.linkedList);
 	memMan.freeMem -= size;
+	puts("free");
+	printf("%zd\n", memMan.freeMem);
+	puts("");
 	return address;
 }
 
@@ -36,15 +42,18 @@ void memoryInit()
 	memMan.maxFreeMem = memorySize;
 	memMan.freeMem  = memorySize;
 	memMan.memStartAddress = (void*) memory;
+	//printf("%p\n", memMan.memStartAddress);
 }
 
 int main(int argc, char const *argv[])
 {
-	puts("OK");
-	/*memoryInit();
-	char* buf;
+	memoryInit();
 	int bufSize = 20;
-	buf = (char*) my_malloc(sizeof(char)* bufSize);*/
+	char* buf0 = (char*) my_malloc(sizeof(char)* bufSize);
+	char* buf1 = (char*) my_malloc(sizeof(char)* bufSize);
+	char* buf2 = (char*) my_malloc(sizeof(char)* bufSize);
+	char* buf3 = (char*) my_malloc(sizeof(char)* bufSize);
+	char* buf4 = (char*) my_malloc(sizeof(char)* bufSize);
 	//free(buf);
 	return 0;
 }

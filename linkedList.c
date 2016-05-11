@@ -1,36 +1,38 @@
 #include "linkedList.h"
 #include <stdio.h>
 
-void push(struct LinkedList* head, void* addres, size_t size) 
+void push(struct LinkedList** head, void* address, size_t size) 
 {
 	struct LinkedList *tmp = (struct LinkedList *)malloc(sizeof(struct LinkedList));
 	if (tmp == NULL)
 		exit(1);
 
-	if (head == NULL){
-		tmp->next = head;
+	if (*head == NULL){
+		tmp->next = *head;
 		tmp->segSize = size;
-		tmp->segPtr = addres;
-		head = tmp;
+		tmp->segPtr = address;
+		*head = tmp;
 		return;
 	}
 
-	struct LinkedList *iterator = head;
+	//TODO fix push
+	struct LinkedList *iterator = *head;
 	struct LinkedList *preiterator = iterator;
 	while(iterator->next != NULL){
-		if(iterator->segPtr < addres)
+		if(iterator->segPtr < address)
 			break;
 		preiterator = iterator;
 		iterator = iterator->next;
 	}
-	tmp->next = head;
+	tmp->next = *head;
 	tmp->segSize = size;
-	tmp->segPtr = addres;
-	tmp->next = iterator;
-	if (iterator == preiterator){
+	tmp->segPtr = address;
+	*head = tmp;
+	//tmp->next = iterator;
+	/*if (iterator == preiterator){
 		return;
 	} 
-	preiterator->next = tmp;
+	preiterator->next = tmp;*/
 }
 
 void pop(struct LinkedList* head, void* ptr) 

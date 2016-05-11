@@ -3,8 +3,10 @@
 
 void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 {
+	puts("start find");
 	if (memManag->freeMem == memManag->maxFreeMem)
 		return memManag->memStartAddress;
+
 	struct LinkedList* head = memManag->linkedList;
 	size_t notAppropriate = 0;
 	void* ptr, *preptr;
@@ -14,9 +16,11 @@ void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 	struct LinkedList* prehead = head;
 
 	//TODO add adding to linkedList according to ptr value
+	//TODO fix this func
 	while(head->next != NULL){
+		puts("iteration");
 		ptr = head->segPtr;
-		sizeBetweenSegs = (size_t)ptr - (size_t)preptr;
+		sizeBetweenSegs = (size_t)ptr - (size_t)preptr - head->segSize;
 		preptr = ptr;
 		if (sizeBetweenSegs >= size){
 			return (void*)((char*)ptr + head->segSize); //think a bit about size type conversion
@@ -25,7 +29,8 @@ void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 		prehead = head;
 		head = head->next;
 	}
-	if (notAppropriate >= (memManag->freeMem - size)){
+	puts("bad iteration");
+	if (notAppropriate > (memManag->freeMem - size)){
 		puts("big segmentation");
 		exit(1);
 	}	
