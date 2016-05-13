@@ -26,10 +26,15 @@ void* my_malloc(size_t size)
 	return address;
 }
 
-/*void my_free(void* ptr)
+void my_free(void* ptr)
 {
-
-}*/
+	size_t size;
+	size = pop(&(memMan.linkedList), ptr);
+	memMan.freeMem += size;
+	puts("free");
+	printf("%zd\n", memMan.freeMem);
+	puts("");
+}
 
 /*void printmem(void* ptr)
 {
@@ -47,13 +52,15 @@ void memoryInit()
 
 int main(int argc, char const *argv[])
 {
+	//TODO fix malloc after free of smaller size
 	memoryInit();
 	int bufSize = 20;
 	char* buf0 = (char*) my_malloc(sizeof(char)* bufSize);
-	char* buf1 = (char*) my_malloc(sizeof(char)* bufSize);
+	char* buf1 = (char*) my_malloc(sizeof(char)* 16);
 	char* buf2 = (char*) my_malloc(sizeof(char)* bufSize);
-	char* buf3 = (char*) my_malloc(sizeof(char)* bufSize);
+	char* buf3 = (char*) my_malloc(sizeof(char)* 16);
+	my_free(buf1);
 	char* buf4 = (char*) my_malloc(sizeof(char)* bufSize);
-	//free(buf);
+
 	return 0;
 }

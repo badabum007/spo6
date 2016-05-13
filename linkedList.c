@@ -35,36 +35,46 @@ void push(struct LinkedList** head, void* address, size_t size)
 	preiterator->next = tmp;*/
 }
 
-void pop(struct LinkedList* head, void* ptr) 
+size_t pop(struct LinkedList** head, void* ptr) 
 {
-	struct LinkedList* prehead = head;
-	while(head != NULL){
-		prehead = head;
-		if (head->segPtr == ptr)
+	//puts("hello");
+	size_t size;
+	struct LinkedList* prehead = *head;
+	while(*head != NULL){
+		//puts("iter");
+		if ((*head)->segPtr == ptr)
 			break;
-		head = head->next;
+		prehead = *head;
+		*head = (*head)->next;
 	}
-	if (head == NULL){
+	if (*head == NULL){
 		puts("double my_free() or corruption");
 		exit(1);
 	}
 
 	//from head
-	if (prehead == head){
-		head = head->next;
+	if (prehead == *head){
+		//puts("head");
+		*head = (*head)->next;
+		size = prehead->segSize;
 		free(prehead);
-		return;
+		return size;
 	}
 
 	//tail element deletion
-	if (head->next == NULL)
+	if ((*head)->next == NULL)
 	{
+		//puts("tail");
 		prehead->next = NULL;
-		free(head);
-		return;
+		size = (*head)->segSize;
+		free(*head);
+		return size;
 	}
 
 	//in the middle
-	prehead->next = head->next;
-	free(head);
+	//puts("middle");
+	prehead->next = (*head)->next;
+	size = (*head)->segSize;
+	free(*head);
+	return size;
 }
