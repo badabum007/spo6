@@ -53,12 +53,14 @@ int main(int argc, char const *argv[])
 	char* buf0 = (char*) my_malloc(sizeof(char)* bufSize);
 	char* buf1 = (char*) my_malloc(sizeof(char)* bufSize);
 	char* buf2 = (char*) my_malloc(sizeof(char)* bufSize);
-	char* buf3 = (char*) my_malloc(sizeof(char)* bufSize);
+	char* buf3 = (char*) my_malloc(sizeof(char)* 20);
 	show(memMan.linkedList);
 	my_free(buf1);
 	char* buf4 = (char*) my_malloc(sizeof(char)* 10);
 	show(memMan.linkedList);
-	//printmem(&memMan);
+	my_free(buf0);
+	my_free(buf3);
+	printmem(&memMan);
 
 	return 0;
 }

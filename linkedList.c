@@ -71,8 +71,8 @@ size_t pop(struct LinkedList** mainhead, void* ptr)
 
 	//from head
 	if (prehead == head){
-		//puts("head");
-		head = head->next;
+		puts("head");
+		*mainhead = (*mainhead)->next;
 		size = prehead->segSize;
 		free(prehead);
 		return size;
