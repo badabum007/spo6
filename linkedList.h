@@ -8,3 +8,4 @@ struct LinkedList {
 
 void push(struct LinkedList**, void* addres, size_t size);
 size_t pop(struct LinkedList**, void*); //delete node by ptr value
+void show(struct LinkedList* mainhead);

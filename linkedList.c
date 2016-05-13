@@ -24,15 +24,31 @@ void push(struct LinkedList** head, void* address, size_t size)
 		preiterator = iterator;
 		iterator = iterator->next;
 	}
-	tmp->next = *head;
+
 	tmp->segSize = size;
 	tmp->segPtr = address;
-	*head = tmp;
+	if (iterator == *head){
+		tmp->next = *head;
+		*head = tmp;
+	}
+	else{
+		tmp->next = iterator;
+		preiterator->next = tmp;	
+	}
 	//tmp->next = iterator;
 	/*if (iterator == preiterator){
 		return;
 	} 
 	preiterator->next = tmp;*/
+}
+
+void show(struct LinkedList* mainhead){
+	struct LinkedList* head = mainhead;
+	while (head != NULL){
+		printf("ptr  %p\n", head->segPtr);
+		printf("size %zd\n\n", head->segSize);
+		head = head->next;
+	}
 }
 
 size_t pop(struct LinkedList** mainhead, void* ptr) 

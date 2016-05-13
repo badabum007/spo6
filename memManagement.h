@@ -5,6 +5,7 @@ struct MemoryManagement
 	struct LinkedList* linkedList;//pointer list  with size
 	size_t freeMem;
 	size_t maxFreeMem;
+	size_t usedMem;
 	void* memStartAddress;
 };
 
