@@ -36,11 +36,6 @@ void my_free(void* ptr)
 	puts("");
 }
 
-/*void printmem(void* ptr)
-{
-
-}*/
-
 void memoryInit()
 {
 	memMan.linkedList = NULL;
@@ -61,6 +56,7 @@ int main(int argc, char const *argv[])
 	char* buf3 = (char*) my_malloc(sizeof(char)* 16);
 	my_free(buf1);
 	char* buf4 = (char*) my_malloc(sizeof(char)* bufSize);
+	//printmem(&memMan);
 
 	return 0;
 }

@@ -31,14 +31,44 @@ void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 		if (sizeBetweenSegs >= size){
 			return (void*)((char*)ptr + head->segSize); //think a bit about size type conversion
 		}
-		notAppropriate += head->segSize + sizeBetweenSegs;
+		notAppropriate += prehead->segSize + sizeBetweenSegs;
 		//prehead = head;
 		//head = head->next;
 	}
+	if (head != NULL)
+		notAppropriate += head->segSize;
+	printf("notAppropriate %d\n", notAppropriate);
+	//printf("%zd\n", memManag->maxFreeMem - notAppropriate - size);
 	puts("bad iteration");
-	if (notAppropriate > (memManag->freeMem - size)){
+	if ((int)(memManag->maxFreeMem - notAppropriate - size) < 0){
+		//printf("notAppropriate %d\n", notAppropriate);
 		puts("big segmentation");
 		exit(1);
 	}	
-	return (void*)((char*)preptr + prehead->segSize);
+	return (void*)((char*)memManag->linkedList->segPtr + memManag->linkedList->segSize);
+}
+
+void printmem(struct MemoryManagement* memManag)
+{
+	struct LinkedList* head = memManag->linkedList;
+	struct LinkedList* prehead = memManag->linkedList;
+	size_t sizeBetweenSegs;
+	void* ptr, *preptr;
+	for (int i = 0; i < memManag->maxFreeMem; i++){
+		ptr = head->segPtr;
+		preptr = prehead->segPtr;
+		if (head != prehead){
+			sizeBetweenSegs = (size_t)preptr - (size_t)ptr - head->segSize;
+			for(int j = 0; j < sizeBetweenSegs; j++)
+				printf("0");
+			//printf("\n");
+		}
+		if (head != NULL){
+			for(int j = 0; j < head->segSize; j++)
+				printf("1");
+			printf("\n");
+		}
+		prehead = head;
+		head = head->next;
+	}
 }

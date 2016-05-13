@@ -9,3 +9,4 @@ struct MemoryManagement
 };
 
 void* findFreeMem(struct MemoryManagement* ,size_t);
+void printmem(struct MemoryManagement*);
