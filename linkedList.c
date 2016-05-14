@@ -1,7 +1,7 @@
 #include "linkedList.h"
 #include <stdio.h>
 
-void push(struct LinkedList** head, struct LinkedList** tail, void* address, size_t size) 
+void* push(struct LinkedList** head, struct LinkedList** tail, void* address, size_t size) 
 {
 	struct LinkedList *tmp = (struct LinkedList *)malloc(sizeof(struct LinkedList));
 	if (tmp == NULL)
@@ -14,7 +14,7 @@ void push(struct LinkedList** head, struct LinkedList** tail, void* address, siz
 		tmp->segPtr = address;
 		*head = tmp;
 		*tail = *head;
-		return;
+		return &(tmp->segPtr);
 	}
 
 	//TODO fix push
@@ -44,6 +44,7 @@ void push(struct LinkedList** head, struct LinkedList** tail, void* address, siz
 		preiteratorHead->next = tmp;
 		tmp->prev = preiteratorHead;
 	}
+	return &(tmp->segPtr);
 	//tmp->next = iterator;
 	/*if (iterator == preiterator){
 		return;
