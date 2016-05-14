@@ -62,6 +62,9 @@ int main(int argc, char const *argv[])
 	my_free(buf0);
 	my_free(buf3);
 	printmem(&memMan);
+	defrag(&memMan);
+	/*printf("\n");
+	printmem(&memMan);*/
 
 	/*чтобы дефрагметнироватьЖ
 	*возращать через указатель на указатель (void*) а сам указатель - амперсант

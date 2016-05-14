@@ -1,8 +1,10 @@
 #include "memManagement.h"
 #include <stdio.h>
+#include <string.h>
 
 void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 {
+	//start:
 	puts("start find");
 	size_t notAppropriate = 0;
 	if (memManag->freeMem == memManag->maxFreeMem){
@@ -45,6 +47,8 @@ void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 	if ((int)(memManag->maxFreeMem - notAppropriate - size) < 0){
 		//printf("notAppropriate %d\n", notAppropriate);
 		puts("big segmentation");
+		//defrag();
+		//goto start:
 		exit(1);
 	}
 	return (void*)((char*)memManag->listHead->segPtr + memManag->listHead->segSize);
@@ -101,5 +105,35 @@ void printmem(struct MemoryManagement* memManag)
 		}
 		printf("\n");
 	}
+}
 
+void defrag(struct MemoryManagement* memManag){
+	//pointer to pointer??
+	struct LinkedList* head = memManag->listTail;
+	struct LinkedList* prehead = memManag->listTail;
+
+	if (head == NULL)
+		return;
+	//shuffle first node to the left
+	if ((char*)head->segPtr > (char*)memManag->memStartAddress){
+		memmove(memManag->memStartAddress, head->segPtr, head->segSize);
+		head->segPtr = memManag->memStartAddress;
+	}
+
+	printf("\n");
+	printmem(memManag);
+
+	while(head->prev != NULL){
+		//copy data from next node to prev
+		//first copying is from second to first
+		prehead = head;
+		head = head->prev;
+
+		if ((int)((char*)prehead->segPtr + prehead->segSize < (char*)head->segPtr)){
+			memmove((void*)((char*)prehead->segPtr + prehead->segSize), head->segPtr, head->segSize);
+			head->segPtr = (void*)((char*)prehead->segPtr + prehead->segSize);
+			printf("\n");
+			printmem(memManag);
+		}
+	}
 }
