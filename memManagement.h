@@ -2,7 +2,8 @@
 
 struct MemoryManagement
 {
-	struct LinkedList* linkedList;//pointer list  with size
+	struct LinkedList* listHead;//pointer list  with size
+	struct LinkedList* listTail;//pointer list  with size
 	size_t freeMem;
 	size_t maxFreeMem;
 	void* memStartAddress;

@@ -17,8 +17,8 @@ void* my_malloc(size_t size)
 	address = findFreeMem(&memMan, size);
 	printf("%p\n", address);
 	printf("%zd\n", size);
-	push(&(memMan.linkedList), address, size); //add ptr and size to memMan
-	printf("after push head comes to %p\n", memMan.linkedList);
+	push(&(memMan.listHead), &(memMan.listTail), address, size); //add ptr and size to memMan
+	printf("after push head comes to %p\n", memMan.listHead);
 	memMan.freeMem -= size;
 	puts("free");
 	printf("%zd\n", memMan.freeMem);
@@ -29,7 +29,7 @@ void* my_malloc(size_t size)
 void my_free(void* ptr)
 {
 	size_t size;
-	size = pop(&(memMan.linkedList), ptr);
+	size = pop(&(memMan.listHead), &(memMan.listTail), ptr);
 	memMan.freeMem += size;
 	puts("free");
 	printf("%zd\n", memMan.freeMem);
@@ -38,7 +38,8 @@ void my_free(void* ptr)
 
 void memoryInit()
 {
-	memMan.linkedList = NULL;
+	memMan.listHead = NULL;
+	memMan.listTail = NULL;
 	memMan.maxFreeMem = memorySize;
 	memMan.freeMem  = memorySize;
 	memMan.memStartAddress = (void*) memory;
@@ -54,13 +55,20 @@ int main(int argc, char const *argv[])
 	char* buf1 = (char*) my_malloc(sizeof(char)* bufSize);
 	char* buf2 = (char*) my_malloc(sizeof(char)* bufSize);
 	char* buf3 = (char*) my_malloc(sizeof(char)* 20);
-	show(memMan.linkedList);
+	show(memMan.listHead);
 	my_free(buf1);
 	char* buf4 = (char*) my_malloc(sizeof(char)* 10);
-	show(memMan.linkedList);
+	show(memMan.listHead);
 	my_free(buf0);
 	my_free(buf3);
 	printmem(&memMan);
+
+	/*чтобы дефрагметнироватьЖ
+	*возращать через указатель на указатель (void*) а сам указатель - амперсант
+	*скорее всего нет
+	*надо подумать
+	*!!!!двухсвязный список!!!
+	*/
 
 	return 0;
 }

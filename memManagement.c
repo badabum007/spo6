@@ -9,7 +9,7 @@ void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 		return memManag->memStartAddress;
 	}
 
-	struct LinkedList* head = memManag->linkedList;
+	struct LinkedList* head = memManag->listHead;
 	void* ptr, *preptr;
 	ptr = head->segPtr;
 	preptr = ptr;
@@ -47,13 +47,13 @@ void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 		puts("big segmentation");
 		exit(1);
 	}
-	return (void*)((char*)memManag->linkedList->segPtr + memManag->linkedList->segSize);
+	return (void*)((char*)memManag->listHead->segPtr + memManag->listHead->segSize);
 }
 
 void printmem(struct MemoryManagement* memManag)
 {
-	struct LinkedList* head = memManag->linkedList;
-	struct LinkedList* prehead = memManag->linkedList;
+	struct LinkedList* head = memManag->listHead;
+	struct LinkedList* prehead = memManag->listHead;
 	size_t sizeBetweenSegs;
 	void* ptr, *preptr;
 	int i = 0;
