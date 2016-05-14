@@ -52,24 +52,22 @@ void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 
 void printmem(struct MemoryManagement* memManag)
 {
-	struct LinkedList* head = memManag->listHead;
-	struct LinkedList* prehead = memManag->listHead;
+	struct LinkedList* head = memManag->listTail;
+	struct LinkedList* prehead = memManag->listTail;
 	size_t sizeBetweenSegs;
 	void* ptr, *preptr;
 	int i = 0;
 	/*printf("%p\n", head->segPtr);
 	exit(1);*/
-	int freeMemAfterLastSeg = (int)(memManag->maxFreeMem - ((char*)head->segPtr
-	 - (char*)memManag->memStartAddress) - head->segSize);
+
+	int freeMemAfterLastSeg = (int)((char*)head->segPtr
+		- (char*)memManag->memStartAddress);
 	if (freeMemAfterLastSeg > 0){
-		/*puts("ORLY");
-		exit(1);*/
 		for ( ; i < freeMemAfterLastSeg;){
 			printf("0");
 			i++;
 		}
-		//printf("\n");
-		//puts("ORLY");
+		printf("\n");
 	}
 	for ( ; i < memManag->maxFreeMem;){
 		if (head == NULL){
@@ -78,21 +76,23 @@ void printmem(struct MemoryManagement* memManag)
 		ptr = head->segPtr;
 		preptr = prehead->segPtr;
 		if (head != prehead){
-			sizeBetweenSegs = (size_t)preptr - (size_t)ptr ;
-			printf("%zd\n", sizeBetweenSegs);
-			for(int j = 0; j < sizeBetweenSegs - head->segSize; j++)
+			sizeBetweenSegs = (size_t)ptr - (size_t)preptr - prehead->segSize;
+			//printf("%zd\n", sizeBetweenSegs);
+			for(int j = 0; j < sizeBetweenSegs; j++)
 				printf("0");
-			i += sizeBetweenSegs - head->segSize;
+			i += sizeBetweenSegs;
+			printf("\n");
 		}
 		if (head != NULL){
 			for(int j = 0; j < head->segSize; j++)
 				printf("1");
-			printf("\n");
+			//printf("\n");
 			i += head->segSize;
 		}
 		prehead = head;
-		head = head->next;
+		head = head->prev;
 	}
+	printf("\n");
 
 	if (i < memManag->maxFreeMem){
 		while (i < memManag->maxFreeMem){
@@ -101,4 +101,5 @@ void printmem(struct MemoryManagement* memManag)
 		}
 		printf("\n");
 	}
+
 }
