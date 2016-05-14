@@ -4,7 +4,8 @@
 
 void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 {
-	//start:
+	int defragflg = 0;
+	start:
 	puts("start find");
 	size_t notAppropriate = 0;
 	if (memManag->freeMem == memManag->maxFreeMem){
@@ -46,9 +47,12 @@ void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 	puts("bad iteration");
 	if ((int)(memManag->maxFreeMem - notAppropriate - size) < 0){
 		//printf("notAppropriate %d\n", notAppropriate);
+		if(defragflg == 0){
+			defragflg = 1;
+			defrag(memManag);
+			goto start;
+		}
 		puts("big segmentation");
-		//defrag();
-		//goto start:
 		exit(1);
 	}
 	return (void*)((char*)memManag->listHead->segPtr + memManag->listHead->segSize);
