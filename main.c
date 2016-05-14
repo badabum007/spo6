@@ -16,15 +16,9 @@ void** my_malloc(size_t size)
 	}
 	void* address;
 	address = findFreeMem(&memMan, size);
-	printf("%p\n", address);
-	printf("%zd\n", size);
 	void** ptrToAddress;
 	ptrToAddress = push(&(memMan.listHead), &(memMan.listTail), address, size); //add ptr and size to memMan
-	printf("after push head comes to %p\n", memMan.listHead);
 	memMan.freeMem -= size;
-	puts("free");
-	printf("%zd\n", memMan.freeMem);
-	puts("");
 	return ptrToAddress;
 }
 
@@ -33,9 +27,6 @@ void my_free(void* ptr)
 	size_t size;
 	size = pop(&(memMan.listHead), &(memMan.listTail), ptr);
 	memMan.freeMem += size;
-	puts("free");
-	printf("%zd\n", memMan.freeMem);
-	puts("");
 }
 
 void memoryInit()
@@ -45,12 +36,10 @@ void memoryInit()
 	memMan.maxFreeMem = memorySize;
 	memMan.freeMem  = memorySize;
 	memMan.memStartAddress = (void*) memory;
-	//printf("%p\n", memMan.memStartAddress);
 }
 
 int main(int argc, char const *argv[])
 {
-	//TODO fix malloc after free of smaller size
 	memoryInit();
 	int bufSize = 20;
 	char **buf0, **buf1, **buf2, **buf3, **buf4;
@@ -68,43 +57,16 @@ int main(int argc, char const *argv[])
 	puts(*buf2);
 	puts(*buf3);
 
-	//show(memMan.listHead);
 	my_free(*buf1);
 	my_free(*buf3);
 	printmem(&memMan);
 	buf4 = (char**) my_malloc(sizeof(char)* 30);
+	strcpy(*buf4, "fourth");
 	printmem(&memMan);
-	//show(memMan.listHead);
-	/*my_free(buf0);
-	//my_free(buf3);
-	printmem(&memMan);
-	defrag(&memMan);*/
 
-	//puts(buf0);
 	puts(*buf0);
-	//puts(buf2);
 	puts(*buf2);
-
-	/*printf("\n");
-	printmem(&memMan);*/
-
-	/*чтобы дефрагметнироватьЖ
-	*возращать через указатель на указатель (void*) а сам указатель - амперсант
-	*скорее всего нет
-	*надо подумать
-	*!!!!двухсвязный список!!!
-	*/
-
-	/* ----- протестировать работу приложки-------
-	* протестировать работу после дефрагментации (адреса)
-	*
-	*
-	*/
-
-
-	/*
-	*fix pointers in main()
-	*/
+	puts(*buf4);
 
 	return 0;
 }

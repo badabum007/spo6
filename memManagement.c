@@ -5,48 +5,39 @@
 void* findFreeMem(struct MemoryManagement* memManag, size_t size)
 {
 	int defragflg = 0;
+	size_t notAppropriate;
+	struct LinkedList* head;
+	void* ptr, *preptr;
+	size_t sizeBetweenSegs;
+	struct LinkedList* prehead;
+
 	start:
-	puts("start find");
-	size_t notAppropriate = 0;
+	notAppropriate = 0;
 	if (memManag->freeMem == memManag->maxFreeMem){
 		return memManag->memStartAddress;
 	}
 
-	struct LinkedList* head = memManag->listHead;
-	void* ptr, *preptr;
+	head = memManag->listHead;
 	ptr = head->segPtr;
 	preptr = ptr;
-	size_t sizeBetweenSegs;
-	struct LinkedList* prehead = head;
+	prehead = head;
 
 	while(head->next != NULL){
 		prehead = head;
 		preptr = prehead->segPtr;
 		head = head->next;
 		ptr = head->segPtr;
-		puts("iteration");
-		printf("------preHeadPtr---  %p\n",preptr);
-		printf("------HeadPtr---  %p\n",ptr);
-		printf("------headSize---  %zd\n",head->segSize);
-		//ptr = head->segPtr;
 		sizeBetweenSegs = (size_t)preptr - (size_t)ptr - head->segSize;
-		printf("------size---betweenSegs  %zd\n",sizeBetweenSegs);
-		//preptr = ptr;
 		if (sizeBetweenSegs >= size){
-			return (void*)((char*)ptr + head->segSize); //think a bit about size type conversion
+			return (void*)((char*)ptr + head->segSize);
 		}
 		notAppropriate += prehead->segSize + sizeBetweenSegs;
-		//prehead = head;
-		//head = head->next;
 	}
 	if (head != NULL){
 		notAppropriate += head->segSize;
 	}
-	printf("notAppropriate %d\n", notAppropriate);
-	//printf("%zd\n", memManag->maxFreeMem - notAppropriate - size);
-	puts("bad iteration");
+
 	if ((int)(memManag->maxFreeMem - notAppropriate - size) < 0){
-		//printf("notAppropriate %d\n", notAppropriate);
 		if(defragflg == 0){
 			defragflg = 1;
 			defrag(memManag);
@@ -65,8 +56,6 @@ void printmem(struct MemoryManagement* memManag)
 	size_t sizeBetweenSegs;
 	void* ptr, *preptr;
 	int i = 0;
-	/*printf("%p\n", head->segPtr);
-	exit(1);*/
 
 	int freeMemAfterLastSeg = (int)((char*)head->segPtr
 		- (char*)memManag->memStartAddress);
@@ -85,7 +74,6 @@ void printmem(struct MemoryManagement* memManag)
 		preptr = prehead->segPtr;
 		if (head != prehead){
 			sizeBetweenSegs = (size_t)ptr - (size_t)preptr - prehead->segSize;
-			//printf("%zd\n", sizeBetweenSegs);
 			for(int j = 0; j < sizeBetweenSegs; j++)
 				printf("0");
 			i += sizeBetweenSegs;
@@ -94,7 +82,6 @@ void printmem(struct MemoryManagement* memManag)
 		if (head != NULL){
 			for(int j = 0; j < head->segSize; j++)
 				printf("1");
-			//printf("\n");
 			i += head->segSize;
 		}
 		prehead = head;
@@ -109,10 +96,11 @@ void printmem(struct MemoryManagement* memManag)
 		}
 		printf("\n");
 	}
+	printf("\n");
 }
 
-void defrag(struct MemoryManagement* memManag){
-	//pointer to pointer??
+void defrag(struct MemoryManagement* memManag)
+{
 	struct LinkedList* head = memManag->listTail;
 	struct LinkedList* prehead = memManag->listTail;
 
@@ -124,9 +112,6 @@ void defrag(struct MemoryManagement* memManag){
 		head->segPtr = memManag->memStartAddress;
 	}
 
-	printf("\n");
-	printmem(memManag);
-
 	while(head->prev != NULL){
 		//copy data from next node to prev
 		//first copying is from second to first
@@ -136,8 +121,6 @@ void defrag(struct MemoryManagement* memManag){
 		if ((int)((char*)prehead->segPtr + prehead->segSize < (char*)head->segPtr)){
 			memmove((void*)((char*)prehead->segPtr + prehead->segSize), head->segPtr, head->segSize);
 			head->segPtr = (void*)((char*)prehead->segPtr + prehead->segSize);
-			printf("\n");
-			printmem(memManag);
 		}
 	}
 }

@@ -17,7 +17,6 @@ void* push(struct LinkedList** head, struct LinkedList** tail, void* address, si
 		return &(tmp->segPtr);
 	}
 
-	//TODO fix push
 	struct LinkedList *iteratorHead = *head;
 	struct LinkedList *preiteratorHead = iteratorHead;
 	while(iteratorHead->next != NULL){
@@ -45,31 +44,24 @@ void* push(struct LinkedList** head, struct LinkedList** tail, void* address, si
 		tmp->prev = preiteratorHead;
 	}
 	return &(tmp->segPtr);
-	//tmp->next = iterator;
-	/*if (iterator == preiterator){
-		return;
-	} 
-	preiterator->next = tmp;*/
 }
 
 void show(struct LinkedList* mainhead){
 	struct LinkedList* head = mainhead;
 	while (head != NULL){
 		printf("ptr  %p\n", head->segPtr);
-		printf("size %zd\n\n", head->segSize);
+		printf("size %d\n\n", head->segSize);
 		head = head->next;
 	}
 }
 
 size_t pop(struct LinkedList** mainhead, struct LinkedList** maintail, void* ptr) 
 {
-	//puts("hello");
 	size_t size;
 	struct LinkedList* prehead = *mainhead;
 	struct LinkedList* head = *mainhead;
 
 	while(head != NULL){
-		//puts("iter");
 		if (head->segPtr == ptr)
 			break;
 		prehead = head;
@@ -82,7 +74,6 @@ size_t pop(struct LinkedList** mainhead, struct LinkedList** maintail, void* ptr
 
 	//from head
 	if (prehead == head){
-		puts("head");
 		if (head == *maintail){
 			*maintail = NULL;
 		}
@@ -96,7 +87,6 @@ size_t pop(struct LinkedList** mainhead, struct LinkedList** maintail, void* ptr
 	//tail element deletion
 	if (head->next == NULL)
 	{
-		puts("tail");
 		prehead->next = NULL;
 		size = head->segSize;
 		*maintail = head->prev;
@@ -105,8 +95,6 @@ size_t pop(struct LinkedList** mainhead, struct LinkedList** maintail, void* ptr
 	}
 
 	//in the middle
-	puts("mid");
-	printf("%p\n", head->segPtr);
 	prehead->next = head->next;
 	size = head->segSize;
 	head->next->prev = head->prev;
