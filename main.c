@@ -6,50 +6,18 @@
 char memory[memorySize];
 struct MemoryManagement memMan;
 
-void** my_malloc(size_t size)
-{
-	if (size == 0)
-		return NULL;
-	if(memMan.freeMem < size){
-		puts("not enough memory");
-		exit(1);
-	}
-	void* address;
-	address = findFreeMem(&memMan, size);
-	void** ptrToAddress;
-	ptrToAddress = push(&(memMan.listHead), &(memMan.listTail), address, size); //add ptr and size to memMan
-	memMan.freeMem -= size;
-	return ptrToAddress;
-}
-
-void my_free(void* ptr)
-{
-	size_t size;
-	size = pop(&(memMan.listHead), &(memMan.listTail), ptr);
-	memMan.freeMem += size;
-}
-
-void memoryInit()
-{
-	memMan.listHead = NULL;
-	memMan.listTail = NULL;
-	memMan.maxFreeMem = memorySize;
-	memMan.freeMem  = memorySize;
-	memMan.memStartAddress = (void*) memory;
-}
-
 int main(int argc, char const *argv[])
 {
-	memoryInit();
+	memoryInit(&memMan, memorySize, (void*)(&memory));
 	int bufSize = 20;
 	char **buf0, **buf1, **buf2, **buf3, **buf4;
-	buf0 = (char**) my_malloc(sizeof(char)* bufSize);
+	buf0 = (char**) my_malloc(&memMan, sizeof(char)* bufSize);
 	strcpy(*buf0, "null");
-	buf1 = (char**) my_malloc(sizeof(char)* 20);
+	buf1 = (char**) my_malloc(&memMan, sizeof(char)* bufSize);
 	strcpy(*buf1, "first");
-	buf2 = (char**) my_malloc(sizeof(char)* bufSize);
+	buf2 = (char**) my_malloc(&memMan, sizeof(char)* bufSize);
 	strcpy(*buf2, "second");
-	buf3 = (char**) my_malloc(sizeof(char)* 20);
+	buf3 = (char**) my_malloc(&memMan, sizeof(char)* bufSize);
 	strcpy(*buf3, "third");
 
 	puts(*buf0);
@@ -57,10 +25,10 @@ int main(int argc, char const *argv[])
 	puts(*buf2);
 	puts(*buf3);
 
-	my_free(*buf1);
-	my_free(*buf3);
+	my_free(&memMan, *buf1);
+	my_free(&memMan, *buf3);
 	printmem(&memMan);
-	buf4 = (char**) my_malloc(sizeof(char)* 30);
+	buf4 = (char**) my_malloc(&memMan, sizeof(char)* 30);
 	strcpy(*buf4, "fourth");
 	printmem(&memMan);
 

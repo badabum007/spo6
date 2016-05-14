@@ -12,3 +12,7 @@ struct MemoryManagement
 void* findFreeMem(struct MemoryManagement* ,size_t);
 void printmem(struct MemoryManagement*);
 void defrag(struct MemoryManagement*);
+
+void memoryInit(struct MemoryManagement*, int, void*);
+void** my_malloc(struct MemoryManagement*, size_t);
+void my_free(struct MemoryManagement*, void*);

@@ -124,3 +124,35 @@ void defrag(struct MemoryManagement* memManag)
 		}
 	}
 }
+
+void memoryInit(struct MemoryManagement* memMan, int memorySize, void* memory)
+{
+	memMan->listHead = NULL;
+	memMan->listTail = NULL;
+	memMan->maxFreeMem = memorySize;
+	memMan->freeMem  = memorySize;
+	memMan->memStartAddress = memory;
+}
+
+void** my_malloc(struct MemoryManagement* memMan, size_t size)
+{
+	if (size == 0)
+		return NULL;
+	if(memMan->freeMem < size){
+		puts("not enough memory");
+		exit(1);
+	}
+	void* address;
+	address = findFreeMem(memMan, size);
+	void** ptrToAddress;
+	ptrToAddress = push(&(memMan->listHead), &(memMan->listTail), address, size); //add ptr and size to memMan
+	memMan->freeMem -= size;
+	return ptrToAddress;
+}
+
+void my_free(struct MemoryManagement* memMan, void* ptr)
+{
+	size_t size;
+	size = pop(&(memMan->listHead), &(memMan->listTail), ptr);
+	memMan->freeMem += size;
+}
