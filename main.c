@@ -30,6 +30,12 @@ int main(int argc, char const *argv[])
 	printmem(&memMan);
 	buf4 = (char**) my_malloc(&memMan, sizeof(char)* 30);
 	strcpy(*buf4, "fourth");
+	int **array;
+	array = (int**) my_malloc(&memMan, sizeof(int)* 2);
+	*(*array)= 4;
+	*(*array + 1) = 9;
+	printf("%d\n", **array);
+	printf("%d\n", *(*array + 1));
 	printmem(&memMan);
 
 	puts(*buf0);
